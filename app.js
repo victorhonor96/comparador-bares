@@ -10,7 +10,7 @@ window.supabase = supabase;
 // --- FUNÇÃO ADICIONAR OU ATUALIZAR PREÇO ---
 window.adicionarPreco = async function () {
   const produtoSelect = document.getElementById("produto");
-  const barInput = document.getElementById("bar"); // agora é "bar"
+  const barInput = document.getElementById("bar");
   const precoInput = document.getElementById("preco");
 
   const produto = produtoSelect.value;
@@ -22,18 +22,27 @@ window.adicionarPreco = async function () {
     return;
   }
 
-  const { error } = await supabase
+  // 1️⃣ Deletar preço antigo, se existir
+  const { error: deleteError } = await supabase
     .from("bares")
-    .upsert(
-      [{ produto, bar, preco }], // usa "bar"
-      { onConflict: "produto,bar" } // evita duplicados
-    );
+    .delete()
+    .eq("produto", produto)
+    .eq("bar", bar);
 
-  if (error) {
-    console.log(error);
-    alert("Erro ao salvar/atualizar preço!");
+  if (deleteError) {
+    console.log("Erro ao deletar antigo:", deleteError);
+  }
+
+  // 2️⃣ Inserir novo registro
+  const { error: insertError } = await supabase
+    .from("bares")
+    .insert([{ produto, bar, preco }]);
+
+  if (insertError) {
+    console.log("Erro ao inserir novo:", insertError);
+    alert("Erro ao salvar preço!");
   } else {
-    alert("Preço salvo/atualizado com sucesso!");
+    alert("Preço atualizado com sucesso!");
     precoInput.value = "";
     barInput.value = "";
     produtoSelect.value = "";
