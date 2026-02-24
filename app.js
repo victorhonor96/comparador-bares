@@ -32,7 +32,7 @@ window.adicionarPreco = async function () {
     await supabase
   .from("bares")
   .upsert(
-    [{ produto, mercado, preco }],
+    [{ produto, bar, preco }],
     { onConflict: ["produto", "bar"] }
   )
   
