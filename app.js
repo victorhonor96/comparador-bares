@@ -7,13 +7,12 @@ const supabase = createClient(supabaseUrl, supabaseKey)
 // Expor globalmente (opcional para testes no console)
 window.supabase = supabase;
 
-// --- FUNÇÃO ADICIONAR OU ATUALIZAR PREÇO ---
-window.adicionarPreco = async function () {
+adicionarPreco = async function () {
   const produtoSelect = document.getElementById("produto");
   const barInput = document.getElementById("bar");
   const precoInput = document.getElementById("preco");
 
-  const produto = produtoSelect.value;
+  const produto = produtoSelect.value.trim();
   const bar = barInput.value.trim();
   const preco = parseFloat(precoInput.value);
 
@@ -22,27 +21,19 @@ window.adicionarPreco = async function () {
     return;
   }
 
-  // 1️⃣ Deletar preço antigo, se existir
-  const { error: deleteError } = await supabase
+  // 🔥 Upsert seguro: cria ou atualiza preço sem conflito
+  const { error } = await supabase
     .from("bares")
-    .delete()
-    .eq("produto", produto)
-    .eq("bar", bar);
+    .upsert(
+      [{ produto, bar, preco }],
+      { onConflict: ["produto","bar"] } // evita duplicados
+    );
 
-  if (deleteError) {
-    console.log("Erro ao deletar antigo:", deleteError);
-  }
-
-  // 2️⃣ Inserir novo registro
-  const { error: insertError } = await supabase
-    .from("bares")
-    .insert([{ produto, bar, preco }]);
-
-  if (insertError) {
-    console.log("Erro ao inserir novo:", insertError);
-    alert("Erro ao salvar preço!");
+  if (error) {
+    console.log("Erro ao salvar preço:", error);
+    alert("Erro ao salvar/atualizar preço!");
   } else {
-    alert("Preço atualizado com sucesso!");
+    alert("Preço salvo/atualizado com sucesso!");
     precoInput.value = "";
     barInput.value = "";
     produtoSelect.value = "";
@@ -59,7 +50,7 @@ window.buscarPreco = async function () {
     return;
   }
 
-  const produto = buscaSelect.value;
+  const produto = buscaSelect.value.trim();
   console.log("Produto buscado:", produto);
 
   if (!produto) {
@@ -74,7 +65,7 @@ window.buscarPreco = async function () {
     .order("preco", { ascending: true });
 
   if (error) {
-    console.log(error);
+    console.log("Erro ao buscar preços:", error);
     resultadoDiv.innerHTML = "Erro ao buscar preços.";
     return;
   }
@@ -88,11 +79,7 @@ window.buscarPreco = async function () {
   let html = "";
   data.forEach((item, index) => {
     if (index === 0) {
-      html += `
-        <p style="color: green; font-weight: bold;">
-          🏆 ${item.bar} - R$ ${item.preco.toFixed(2)}
-        </p>
-      `;
+      html += `<p style="color: green; font-weight: bold;">🏆 ${item.bar} - R$ ${item.preco.toFixed(2)}</p>`;
     } else {
       html += `<p>${item.bar} - R$ ${item.preco.toFixed(2)}</p>`;
     }
