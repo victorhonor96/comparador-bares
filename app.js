@@ -4,10 +4,8 @@ const supabaseUrl = 'https://zuupkhhvcrjzwkgwwtgz.supabase.co'
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp1dXBraGh2Y3JqendrZ3d3dGd6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE5NDg3MTcsImV4cCI6MjA4NzUyNDcxN30.KJiStEORy4v9egIiPsbK5qy_KS4GPwYSypFEZ3494zw'
 const supabase = createClient(supabaseUrl, supabaseKey)
 
-// Expor globalmente (opcional para testes no console)
-window.supabase = supabase;
 
-adicionarPreco = async function () {
+window.adicionarPreco = async function () {
   const produtoSelect = document.getElementById("produto");
   const barInput = document.getElementById("bar");
   const precoInput = document.getElementById("preco");
