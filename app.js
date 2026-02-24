@@ -29,8 +29,13 @@ window.adicionarPreco = async function () {
 
   const { error } = await supabase
     .from("bares")
-    .insert([{ produto, bar, preco }])
-
+    await supabase
+  .from("bares")
+  .upsert(
+    [{ produto, mercado, preco }],
+    { onConflict: ["produto", "bar"] }
+  )
+  
   if (error) {
     alert("Erro ao salvar")
     console.log(error)
