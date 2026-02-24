@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Comparador de Bares</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+
+  <h1>Comparador de Bares 🍻</h1>
+
+  <div class="card">
+    <h2>Adicionar preço</h2>
+<select id="produto">
+  <option value="">Selecione o produto</option>
+  <option value="Antártica Litrão">Antártica Litrão</option>
+  <option value="Brahma Litrão">Brahma Litrão</option>
+  <option value="Original Litrão">Original Litrão</option>
+  <option value="Antártica 600mL">Antártica 600mL</option>
+  <option value="Eisenbahn 600mL">Eisenbahn 600mL</option>
+  <option value="Heineken 600mL">Heineken 600mL</option>
+</select>
+    <input type="text" id="bar" placeholder="Bar">
+    <input type="number" id="preco" placeholder="Preço" step="0.01">
+    <button onclick="adicionarPreco()">Salvar</button>
+  </div>
+
+  <div class="card">
+    <h2>Buscar produto</h2>
+    <select id="buscaProduto">
+  <option value="">Selecione um produto</option>
+  <option value="Antártica Litrão">Antártica Litrão</option>
+  <option value="Brahma Litrão">Brahma Litrão</option>
+  <option value="Original Litrão">Original Litrão</option>
+  <option value="Antártica 600mL">Antártica 600mL</option>
+  <option value="Eisenbahn 600mL">Eisenbahn 600mL</option>
+  <option value="Heineken 600mL">Heineken 600mL</option>
+</select>
+    <button onclick="buscarPreco()">Buscar</button>
+    <div id="resultado"></div>
+  </div>
+
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
